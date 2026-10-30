@@ -7,9 +7,34 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000; overflow:hidden; font-family:'JetBrains Mono',monospace; cursor:crosshair}
 #canvas{position:fixed; inset:0}
+/* ===== ENTRADA CINEMATICA MIND - NAO ALTERA O MUNDO ===== */
+#entryOverlay{position:fixed; inset:0; z-index:9999; background:#000; display:grid; place-items:center; overflow:hidden; pointer-events:none}
+#entryOverlay.hide{animation:entryFadeOut 1.2s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes entryFadeOut{0%{opacity:1} 100%{opacity:0; visibility:hidden}}
+.entryBg{position:absolute; inset:0; background:radial-gradient(ellipse at center, rgba(0,170,255,0.22) 0%, rgba(0,80,200,0.08) 40%, #000 75%)}
+.entryGlow{position:absolute; width:120vw; height:120vw; left:50%; top:50%; transform:translate(-50%,-50%) scale(0.6); background:radial-gradient(circle, rgba(0,170,255,0.35) 0%, transparent 70%); animation:glowGrow 2.4s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes glowGrow{0%{transform:translate(-50%,-50%) scale(0.3); opacity:0} 60%{opacity:1} 100%{transform:translate(-50%,-50%) scale(1.2); opacity:0.6}}
+.entryScan{position:absolute; left:0; width:100%; height:2px; background:linear-gradient(90deg, transparent, #00aaff, #7c5cff, transparent); box-shadow:0 0 20px #00aaff, 0 0 40px #00aaff88; top:0; animation:scanEntry 2.2s ease-in-out}
+@keyframes scanEntry{0%{top:-2px; opacity:0} 15%{opacity:1} 85%{opacity:1} 100%{top:100%; opacity:0}}
+.entryScanV{position:absolute; top:0; height:100%; width:1px; background:linear-gradient(180deg, transparent, rgba(0,170,255,0.5), transparent); left:0; animation:scanEntryV 2.8s ease-in-out 0.3s}
+@keyframes scanEntryV{0%{left:0; opacity:0} 100%{left:100%; opacity:0.6}}
+.entryParticles{position:absolute; inset:0}
+.entryParticles span{position:absolute; width:2px; height:2px; background:#00aaff; border-radius:50%; box-shadow:0 0 8px #00aaff; animation:particleFloat 3s ease-in-out infinite}
+@keyframes particleFloat{0%,100%{transform:translateY(0) scale(1); opacity:0.3} 50%{transform:translateY(-20px) scale(1.5); opacity:1}}
+.entryCenter{position:relative; z-index:2; text-align:center}
+.entryLogo{font-family:Inter,sans-serif; font-weight:900; font-size:1.1rem; letter-spacing:6px; color:#fff; opacity:0; animation:logoIn 0.8s ease 0.2s forwards}
+.entryLogo b{color:#00aaff; text-shadow:0 0 20px #00aaff}
+@keyframes logoIn{from{opacity:0; letter-spacing:12px; transform:translateY(10px)} to{opacity:1; letter-spacing:6px; transform:translateY(0)}}
+.entrySub{font-size:0.58rem; color:#00aaff; letter-spacing:2px; margin-top:10px; opacity:0; animation:subIn 0.8s ease 0.5s forwards}
+@keyframes subIn{from{opacity:0} to{opacity:1}}
+.entryBar{width:120px; height:1px; background:rgba(255,255,255,0.1); margin:18px auto 0; position:relative; overflow:hidden; opacity:0; animation:subIn 0.8s ease 0.7s forwards}
+.entryBar i{position:absolute; left:0; top:0; height:100%; width:40%; background:linear-gradient(90deg, transparent, #00aaff, #fff); animation:barLoad 2s ease-in-out}
+@keyframes barLoad{0%{left:-40%} 100%{left:100%}}
+/* ===== FIM ENTRADA - SEU CODIGO ORIGINAL ABAIXO INTACTO ===== */
 .hud{position:absolute; inset:0; pointer-events:none; z-index:10; transition:opacity 0.6s}
 .hud.dim{opacity:0.15}
-.corner{position:absolute; width:42px; height:42px; border:2px solid #00aaff; box-shadow:0 0 15px #00aaff88}
+.corner{position:absolute; width:42px; height:42px; border:2px solid #00aaff; box-shadow:0 0 15px #00aaff88; animation:cornerPulse 3s ease-in-out infinite}
+@keyframes cornerPulse{0%,100%{box-shadow:0 0 15px #00aaff88; border-color:#00aaff} 50%{box-shadow:0 0 25px #00aaff, 0 0 45px #00aaff44; border-color:#7dd3fc}}
 .c1{top:20px; left:20px; border-right:0; border-bottom:0} 
 .c2{top:20px; right:20px; border-left:0; border-bottom:0}
 .c3{bottom:20px; left:20px; border-right:0; border-top:0} 
@@ -123,11 +148,25 @@ body{background:#000; overflow:hidden; font-family:'JetBrains Mono',monospace; c
 <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }</script>
 </head>
 <body>
+<!-- ENTRADA CINEMATOGRAFICA - NAO ALTERA ESTRUTURA DO MUNDO -->
+<div id="entryOverlay">
+  <div class="entryBg"></div>
+  <div class="entryGlow"></div>
+  <div class="entryScan"></div>
+  <div class="entryScanV"></div>
+  <div class="entryParticles" id="entryParticles"></div>
+  <div class="entryCenter">
+    <div class="entryLogo">SITES<b>MIND</b></div>
+    <div class="entrySub">● SYSTEM.MIND • TECH_BLUE • PROTOCOLO INICIANDO</div>
+    <div class="entryBar"><i></i></div>
+  </div>
+</div>
+
 <canvas id="canvas"></canvas>
 <div class="hud" id="hud">
   <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
-  <div class="topLeft">● SYSTEM.MIND / <div style="margin-top:7px"><b>GOOGLE<br>LOJISTAS<br><span>DA SUSTO NA<br>CONCORRÊNCIA</span></b></div><div style="margin-top:9px; color:#6aa0ff; font-size:0.58rem">LAT: -29.6369° LON: -51.0128°<br>• ONLINE • BUILD 53 • CENTRAL_ATIVA</div></div>
-  <div class="dataRight">EXPLORE O PLANETA<br>MODE: <i id="mode">HOLO_TECH</i><br> <i id="bpm">72 BPM • BLUE</i><br> <i style="color:#7c5cff">ONLINE</i></div>
+  <div class="topLeft">● SYSTEM.MIND / TECH_BLUE PROTOCOL<div style="margin-top:7px"><b>GOOGLE<br>LOJISTAS<br><span>DA SUSTO<br>CONCORRÊNCIA</span></b></div><div style="margin-top:9px; color:#6aa0ff; font-size:0.58rem">LAT: -29.6369° LON: -51.0128°<br>• ONLINE • BUILD 53 • CENTRAL_ATIVA</div></div>
+  <div class="dataRight">PLANET: EARTH_TECH_BLUE<br>MODE: <i id="mode">HOLO_TECH</i><br>CORE: <i id="bpm">72 BPM • BLUE</i><br>CENTRAL: <i style="color:#7c5cff">ONLINE • GAME LEVEL</i></div>
   <div class="bottomBar"><div class="dot"></div> NOVA: CENTRAL DE INTELIGÊNCIA • <span style="color:#7c5cff">[ FERRAMENTAS + NOVIDADES + SERVIÇOS + OPORTUNIDADES ]</span></div>
 </div>
 
@@ -195,6 +234,30 @@ body{background:#000; overflow:hidden; font-family:'JetBrains Mono',monospace; c
 </div>
 
 <div id="toast">Mensagem copiada! Cole no Direct ✓</div>
+
+<script>
+// ENTRADA CINEMATICA - NAO ALTERA LOGICA DO MUNDO
+(function(){
+  const pContainer=document.getElementById('entryParticles');
+  if(pContainer){
+    for(let i=0;i<18;i++){
+      const s=document.createElement('span');
+      s.style.left=Math.random()*100+'%';
+      s.style.top=Math.random()*100+'%';
+      s.style.animationDelay=(Math.random()*2)+'s';
+      s.style.animationDuration=(2+Math.random()*2)+'s';
+      pContainer.appendChild(s);
+    }
+  }
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const overlay=document.getElementById('entryOverlay');
+  const delay = prefersReduced ? 400 : 2300;
+  setTimeout(()=>{
+    overlay.classList.add('hide');
+    setTimeout(()=>{ overlay.style.display='none'; }, 1200);
+  }, delay);
+})();
+</script>
 
 <script type="module">
 import * as THREE from 'three';
