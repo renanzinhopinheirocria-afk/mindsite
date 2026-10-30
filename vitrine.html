@@ -2,248 +2,132 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIND - VITRINE 3D DE EXPERIÊNCIAS</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MIND - VITRINE 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000; overflow:hidden; font-family:'JetBrains Mono',monospace}
-#canvas{position:fixed; inset:0}
-#ui{position:fixed; inset:0; pointer-events:none; z-index:10}
-/* ENTRADA */
-#entry{position:fixed; inset:0; z-index:1000; background:#000; display:grid; place-items:center; transition:opacity 1.2s cubic-bezier(.16,1,.3,1)}
-#entry.hide{opacity:0; pointer-events:none}
-.entryBg{position:absolute; inset:0; background:radial-gradient(ellipse at center, rgba(0,170,255,0.3), rgba(0,0,0,1) 70%)}
-.entryPortal{width:320px; height:320px; border:1px solid #00aaff55; border-radius:50%; position:relative; animation:portalSpin 4s linear infinite, portalGrow 2.5s ease}
-.entryPortal::before{content:''; position:absolute; inset:-20px; border:1px dashed #00aaff33; border-radius:50%; animation:portalSpin 8s linear reverse infinite}
-.entryPortal::after{content:''; position:absolute; inset:40px; background:radial-gradient(circle, #00aaff55, transparent 70%); border-radius:50%; animation:pulse 1.5s ease infinite}
-@keyframes portalSpin{to{transform:rotate(360deg)}} @keyframes portalGrow{0%{transform:scale(0.2); opacity:0} 100%{transform:scale(1); opacity:1}} @keyframes pulse{0%,100%{transform:scale(1)} 50%{transform:scale(1.15)}}
-.entryScan{position:absolute; left:0; width:100%; height:2px; background:linear-gradient(90deg, transparent, #00aaff, #fff, transparent); box-shadow:0 0 20px #00aaff; top:0; animation:scan 2.2s ease infinite}
+body{background:#000; overflow:hidden; font-family:'JetBrains Mono'}
+#canvas{position:fixed; inset:0; z-index:1}
+#entry{position:fixed; inset:0; z-index:9999; background:#000; display:grid; place-items:center; overflow:hidden}
+#entry.hide{animation:fadeOut 1s ease forwards}
+@keyframes fadeOut{to{opacity:0; visibility:hidden}}
+.entryBg{position:absolute; inset:0; background:radial-gradient(ellipse at center, rgba(0,170,255,0.25), #000 70%)}
+.portalWrap{position:relative; width:300px; height:300px; display:grid; place-items:center}
+.ring{position:absolute; inset:0; border:1px solid rgba(0,170,255,0.5); border-radius:50%; box-shadow:0 0 40px rgba(0,170,255,0.3)}
+.ringDashed{position:absolute; inset:-15px; border:1px dashed rgba(0,170,255,0.25); border-radius:50%; animation:spin 12s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.entryLogo{font-family:Inter; font-weight:900; font-size:3.4rem; color:#fff; letter-spacing:-2px; position:relative; z-index:2; transform:none !important}
+.entryLogo b{color:#00aaff; text-shadow:0 0 20px #00aaff}
+.entrySub{position:absolute; bottom:18%; left:0; right:0; text-align:center; color:#00aaff; font-size:0.62rem; letter-spacing:3px; line-height:1.6}
+.scan{position:absolute; left:0; width:100%; height:2px; background:linear-gradient(90deg, transparent, #00aaff, #fff, transparent); box-shadow:0 0 20px #00aaff; top:0; animation:scan 2.5s ease infinite}
 @keyframes scan{0%{top:0%} 100%{top:100%}}
-.entryLogo{position:relative; z-index:2; font-family:Inter,sans-serif; font-weight:900; font-size:3rem; color:#fff; letter-spacing:-1px}
-.entryLogo b{color:#00aaff; text-shadow:0 0 30px #00aaff}
-.entrySub{font-size:0.65rem; color:#00aaff; letter-spacing:3px; text-align:center; margin-top:12px}
-/* HUD */
-.top{position:absolute; top:20px; left:20px; right:20px; display:flex; justify-content:space-between; pointer-events:auto; gap:12px}
-.searchBox{display:flex; gap:8px; align-items:center; background:rgba(0,15,40,0.85); border:1px solid #00aaff44; border-radius:100px; padding:8px 16px; backdrop-filter:blur(12px)}
-.searchBox input{background:transparent; border:none; color:#fff; outline:none; width:200px; font-family:'JetBrains Mono'; font-size:0.75rem}
-.searchBox input::placeholder{color:#5a7aa0}
-.filters{display:flex; gap:6px; flex-wrap:wrap}
-.filter{padding:7px 14px; border-radius:100px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); color:#8aa; font-size:0.62rem; cursor:pointer; transition:0.2s; pointer-events:auto}
-.filter.on{background:#00aaff; color:#fff; border-color:#00aaff; box-shadow:0 0 20px #00aaff88}
-.bottomInfo{position:absolute; bottom:20px; left:20px; background:rgba(0,15,40,0.7); border:1px solid #00aaff22; border-radius:12px; padding:10px 14px; color:#6a8aaa; font-size:0.58rem; line-height:1.5}
-.bottomInfo b{color:#fff}
-/* PAINEL HOLO CLIENTE */
-#clientModal{position:fixed; inset:0; z-index:100; display:none; place-items:center; background:rgba(0,0,0,0.82); backdrop-filter:blur(20px)}
-#clientModal.on{display:grid}
-.clientBox{width:900px; max-width:95vw; background:linear-gradient(180deg, rgba(10,25,55,0.98), rgba(5,12,28,0.99)); border:1px solid #00aaff55; border-left:4px solid #00aaff; border-radius:24px; padding:28px; display:grid; grid-template-columns:1.2fr 0.8fr; gap:24px; animation:holoIn 0.6s cubic-bezier(.16,1,.3,1)}
-@keyframes holoIn{from{transform:translateY(30px) scale(0.95); opacity:0} to{transform:translateY(0) scale(1); opacity:1}}
-.preview{border-radius:16px; overflow:hidden; border:1px solid #00aaff33; position:relative; background:#000; aspect-ratio:16/10}
-.preview img{width:100%; height:100%; object-fit:cover; opacity:0.9}
-.preview::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 60%, rgba(0,170,255,0.15))}
-.btnVisit{width:100%; padding:14px; border-radius:12px; border:none; background:linear-gradient(90deg, #00aaff, #0088ff); color:#fff; font-weight:900; font-size:0.85rem; cursor:pointer; box-shadow:0 0 30px #00aaff66; margin-top:12px}
-.btnGhost{width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); color:#8aa; cursor:pointer; margin-top:8px}
-.badge{display:inline-block; padding:4px 10px; border-radius:100px; background:rgba(0,170,255,0.15); border:1px solid #00aaff44; color:#00aaff; font-size:0.6rem; margin-bottom:10px}
-#tooltip{position:fixed; z-index:20; background:rgba(0,15,40,0.95); border:1px solid #00aaff; padding:8px 12px; color:#fff; font-size:0.7rem; border-radius:8px; pointer-events:none; display:none}
-@media(max-width:800px){.clientBox{grid-template-columns:1fr} .top{flex-direction:column} .searchBox input{width:120px}}
+#tooltip{position:fixed; background:rgba(0,15,40,0.95); border:1px solid #00aaff; color:#fff; padding:8px 12px; border-radius:8px; font-size:0.7rem; pointer-events:none; display:none; z-index:20}
+#hud{position:fixed; inset:0; z-index:10; pointer-events:none}
+.top{position:absolute; top:16px; left:16px; right:16px; display:flex; justify-content:space-between; pointer-events:auto; gap:8px}
+.search{background:rgba(0,15,40,0.85); border:1px solid #00aaff44; border-radius:100px; padding:8px 14px; backdrop-filter:blur(10px)}
+.search input{background:transparent; border:none; color:#fff; outline:none; width:160px; font-family:'JetBrains Mono'; font-size:0.7rem}
 </style>
 </head>
 <body>
 <div id="entry">
   <div class="entryBg"></div>
-  <div class="entryScan"></div>
-  <div style="position:relative; text-align:center">
-    <div class="entryPortal" style="display:grid; place-items:center; margin:0 auto">
-      <div class="entryLogo">MIND</div>
-    </div>
-    <div class="entrySub">VITRINE 3D • UNIVERSO DE EXPERIÊNCIAS • CARREGANDO</div>
+  <div class="scan"></div>
+  <div class="portalWrap">
+    <div class="ring"></div>
+    <div class="ringDashed"></div>
+    <div class="entryLogo">MIND</div>
   </div>
+  <div class="entrySub">VITRINE 3D • UNIVERSO DE EXPERIÊNCIAS •<br>CARREGANDO</div>
 </div>
 
 <canvas id="canvas"></canvas>
 <div id="tooltip"></div>
-
-<div id="ui">
+<div id="hud">
   <div class="top">
-    <div class="searchBox">🔍 <input id="search" placeholder="PESQUISAR EMPRESA..." oninput="filtrar()"></div>
-    <div class="filters" id="filters"></div>
-  </div>
-  <div class="bottomInfo">
-    <b>● MIND VITRINE 3D</b> • ARRASTE PARA EXPLORAR • SCROLL ZOOM • CLIQUE NA ESTAÇÃO<br>
-    <span id="count">0 EMPRESAS NO UNIVERSO</span> • <span style="color:#00aaff">PREMIUM TECH BLUE</span>
+    <div class="search">🔍 <input id="search" placeholder="PESQUISAR..." oninput="if(window.filtrar) filtrar()"></div>
+    <div style="color:#6aa; font-size:0.55rem; background:rgba(0,0,0,0.6); padding:8px 12px; border-radius:100px; border:1px solid #ffffff15">ARRASTE PARA EXPLORAR • CLIQUE NA PLATAFORMA</div>
   </div>
 </div>
 
-<div id="clientModal">
-  <div class="clientBox" id="clientBox">
-    <div>
-      <div class="badge" id="mCat"></div>
-      <h2 id="mTitle" style="font-family:Inter; font-size:2rem; color:#fff; line-height:0.9"></h2>
-      <p id="mDesc" style="color:#8fb0d0; font-size:0.8rem; margin:14px 0; line-height:1.6"></p>
-      <div id="mTags" style="display:flex; gap:6px; flex-wrap:wrap; margin:12px 0"></div>
-      <button class="btnVisit" id="mVisit">EXPLORAR EXPERIÊNCIA →</button>
-      <button class="btnGhost" onclick="fechar()">✕ VOLTAR AO UNIVERSO</button>
-    </div>
-    <div>
-      <div class="preview"><img id="mImg" src=""><div style="position:absolute; bottom:10px; left:10px; background:#00aaff; color:#fff; font-size:0.6rem; padding:4px 8px; border-radius:20px">● AO VIVO • INTERATIVO</div></div>
-      <div style="margin-top:12px; display:flex; gap:8px">
-        <div style="flex:1; background:rgba(255,255,255,0.05); border-radius:10px; padding:10px; text-align:center"><b id="mStat1" style="color:#fff; display:block">--</b><i style="color:#6a8aaa; font-size:0.55rem; font-style:normal">CATEGORIA</i></div>
-        <div style="flex:1; background:rgba(255,255,255,0.05); border-radius:10px; padding:10px; text-align:center"><b style="color:#00ff88; display:block">ONLINE</b><i style="color:#6a8aaa; font-size:0.55rem; font-style:normal">STATUS</i></div>
-      </div>
-    </div>
-  </div>
-</div>
+<script>
+// ESSE SCRIPT RODA MESMO SE O 3D QUEBRAR - GARANTE QUE A TELA SOME
+setTimeout(function(){
+  var e=document.getElementById('entry');
+  if(e){ e.classList.add('hide'); setTimeout(function(){ e.style.display='none'; }, 1000); }
+}, 2600);
+</script>
 
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// ===== CADASTRO FACIL DE CLIENTES - EDITE AQUI =====
-const CLIENTES_MIND = [
-  { id:1, nome:"Sushi Master Sapiranga", categoria:"Restaurantes", logo:"🍣", desc:"Restaurante japonês premium com delivery 24h e experiência omakase.", img:"https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800", site:"https://example.com/sushi", cor:0xff3b3b, tags:["DELIVERY","PREMIUM","JAPONÊS"] },
-  { id:2, nome:"Barbearia Old Money", categoria:"Barbearias", logo:"💈", desc:"Barbearia clássica com whisky bar e corte na navalha.", img:"https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800", site:"https://example.com/barbearia", cor:0x00aaff, tags:["CORTE","BARBA","ESTILO"] },
-  { id:3, nome:"FitPower Academia", categoria:"Academias", logo:"🏋️", desc:"Academia 24h com personal e plano de treino com IA.", img:"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800", site:"https://example.com/academia", cor:0x00ff88, tags:["24H","MUSCULAÇÃO","CROSS"] },
-  { id:4, nome:"Bella Moda Store", categoria:"Lojas", logo:"👗", desc:"Loja de moda feminina com provador virtual e entrega express.", img:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800", site:"https://example.com/loja", cor:0xa78bfa, tags:["MODA","FEMININA","NOVIDADES"] },
-  { id:5, nome:"Advocacia Silva", categoria:"Escritórios", logo:"⚖️", desc:"Escritório de advocacia com atendimento online e consultoria.", img:"https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800", site:"https://example.com/adv", cor:0xfacc15, tags:["DIREITO","CONSULTA","ONLINE"] },
-  { id:6, nome:"AutoPrime Oficina", categoria:"Serviços", logo:"🔧", desc:"Oficina mecânica com diagnóstico computadorizado e guincho 24h.", img:"https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800", site:"https://example.com/oficina", cor:0x00f0ff, tags:["MECÂNICA","GUINCHO","REVISÃO"] },
-  { id:7, nome:"Marmoris Móveis", categoria:"Empresas", logo:"🪑", desc:"Móveis planejados com projeto 3D gratuito e montagem.", img:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800", site:"https://example.com/moveis", cor:0x7c5cff, tags:["PLANEJADOS","SOB MEDIDA","3D"] },
-  { id:8, nome:"Dra. Lais Estética", categoria:"Marcas pessoais", logo:"✨", desc:"Clínica de estética avançada com harmonização facial.", img:"https://images.unsplash.com/photo-1570172619644-dfd03ed1350b?w=800", site:"https://example.com/estetica", cor:0xff4ecd, tags:["ESTÉTICA","BELEZA","FACIAL"] },
+const CLIENTES = [
+  {nome:"Sushi Master", cat:"Restaurantes", logo:"🍣", cor:0xff3b3b, desc:"Japonês premium"},
+  {nome:"Barbearia Old Money", cat:"Barbearias", logo:"💈", cor:0x00aaff, desc:"Corte clássico"},
+  {nome:"FitPower", cat:"Academias", logo:"🏋️", cor:0x00ff88, desc:"Academia 24h"},
+  {nome:"Bella Moda", cat:"Lojas", logo:"👗", cor:0xa78bfa, desc:"Moda feminina"},
+  {nome:"AutoPrime", cat:"Serviços", logo:"🔧", cor:0x00f0ff, desc:"Oficina premium"},
+  {nome:"Marmoris Móveis", cat:"Empresas", logo:"🪑", cor:0x7c5cff, desc:"Móveis planejados"},
 ];
-// ===== FIM CADASTRO =====
 
-const scene=new THREE.Scene(); scene.background=new THREE.Color(0x020208); scene.fog=new THREE.Fog(0x020208, 12, 30);
-const camera=new THREE.PerspectiveCamera(65, innerWidth/innerHeight, 0.1, 100); camera.position.set(0,4,14);
-const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('canvas'), antialias:true}); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));
-const controls=new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping=true; controls.dampingFactor=0.07; controls.minDistance=5; controls.maxDistance=22; controls.maxPolarAngle=Math.PI/2.1; controls.autoRotate=true; controls.autoRotateSpeed=0.3;
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x020208);
+const camera=new THREE.PerspectiveCamera(65, innerWidth/innerHeight, 0.1, 100); camera.position.set(0,6,13);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('canvas'), antialias:true}); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+const controls=new OrbitControls(camera, renderer.domElement); controls.enableDamping=true; controls.dampingFactor=0.08; controls.minDistance=4; controls.maxDistance=20; controls.autoRotate=true; controls.autoRotateSpeed=0.5;
 
-scene.add(new THREE.AmbientLight(0x223355,0.8));
-const dir=new THREE.DirectionalLight(0xffffff,1); dir.position.set(5,10,5); scene.add(dir);
-const blue1=new THREE.PointLight(0x00aaff,3,25); blue1.position.set(-10,5,0); scene.add(blue1);
-const blue2=new THREE.PointLight(0x7c5cff,2,25); blue2.position.set(10,-2,10); scene.add(blue2);
+scene.add(new THREE.AmbientLight(0x334466,1));
+const p1=new THREE.PointLight(0x00aaff, 2.5, 30); p1.position.set(-8,5,0); scene.add(p1);
+const p2=new THREE.PointLight(0x7c5cff, 2, 30); p2.position.set(8, -2, 8); scene.add(p2);
 
-// chao holografico
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(80,80,40,40), new THREE.MeshBasicMaterial({color:0x00aaff, wireframe:true, transparent:true, opacity:0.05})); floor.rotation.x=-Math.PI/2; floor.position.y=-4; scene.add(floor);
-
-// plataformas clientes
 const group=new THREE.Group(); scene.add(group);
-const markers=[];
-const categorias=[...new Set(CLIENTES_MIND.map(c=>c.categoria))];
-const filterDiv=document.getElementById('filters');
-filterDiv.innerHTML='<button class="filter on" onclick="setCat(\'TODOS\',this)">TODOS</button>'+categorias.map(c=>`<button class="filter" onclick="setCat('${c}',this)">${c.toUpperCase()}</button>`).join('');
-document.getElementById('count').innerText=`${CLIENTES_MIND.length} EMPRESAS NO UNIVERSO`;
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60,20,20), new THREE.MeshBasicMaterial({color:0x00aaff, wireframe:true, transparent:true, opacity:0.04})); floor.rotation.x=-Math.PI/2; floor.position.y=-3.5; scene.add(floor);
 
-let currentCat='TODOS'; let searchText='';
-function createPlatform(cliente, index){
-  const angle=(index/CLIENTES_MIND.length)*Math.PI*2;
-  const radius=6+Math.random()*3;
-  const x=Math.cos(angle)*radius;
-  const z=Math.sin(angle)*radius;
-  const y=Math.sin(index*1.3)*1.2;
-
-  const g=new THREE.Group(); g.position.set(x,y,z);
-
-  // base flutuante
-  const base=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.4,0.3,24), new THREE.MeshStandardMaterial({color:0x0a1a33, emissive:new THREE.Color(cliente.cor), emissiveIntensity:0.15, transparent:true, opacity:0.9}));
-  g.add(base);
-  // anel
-  const ring=new THREE.Mesh(new THREE.RingGeometry(1.35,1.45,32), new THREE.MeshBasicMaterial({color:cliente.cor, transparent:true, opacity:0.6, side:THREE.DoubleSide}));
-  ring.rotation.x=Math.PI/2; ring.position.y=0.25; g.add(ring);
-  // coluna luz
-  const lightBeam=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.8,4,12), new THREE.MeshBasicMaterial({color:cliente.cor, transparent:true, opacity:0.18, blending:THREE.AdditiveBlending}));
-  lightBeam.position.y=2; g.add(lightBeam);
-  // logo esfera
-  const logoMesh=new THREE.Mesh(new THREE.SphereGeometry(0.35,16,16), new THREE.MeshBasicMaterial({color:cliente.cor}));
-  logoMesh.position.y=1.2; g.add(logoMesh);
-
-  g.userData=cliente;
-  group.add(g);
-  markers.push({mesh:g, base, ring, logo:logoMesh, lightBeam, cliente, x0:x, y0:y, z0:z, phase:Math.random()*10});
-
-  // linha energia pro centro
-  const lineGeo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,-4,0), new THREE.Vector3(x,y,z)]);
-  const line=new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color:cliente.cor, transparent:true, opacity:0.12}));
-  scene.add(line);
-}
-CLIENTES_MIND.forEach(createPlatform);
-
-// raycaster
-const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(); const tooltip=document.getElementById('tooltip');
-let hovered=null;
-renderer.domElement.addEventListener('mousemove', e=>{
-  mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
-  tooltip.style.left=e.clientX+15+'px'; tooltip.style.top=e.clientY+15+'px';
+CLIENTES.forEach((c,i)=>{
+  const angle=(i/CLIENTES.length)*Math.PI*2; const r=5.5;
+  const g=new THREE.Group(); g.position.set(Math.cos(angle)*r, Math.sin(i*0.8)*0.6, Math.sin(angle)*r);
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(1,1.2,0.35,20), new THREE.MeshStandardMaterial({color:0x0a1a33, emissive:new THREE.Color(c.cor), emissiveIntensity:0.25}));
+  const ring=new THREE.Mesh(new THREE.RingGeometry(1.25,1.35,24), new THREE.MeshBasicMaterial({color:c.cor, transparent:true, opacity:0.7, side:THREE.DoubleSide})); ring.rotation.x=Math.PI/2; ring.position.y=0.3;
+  const logo=new THREE.Mesh(new THREE.SphereGeometry(0.32,16,16), new THREE.MeshBasicMaterial({color:c.cor})); logo.position.y=1;
+  g.add(base, ring, logo); g.userData=c; group.add(g);
 });
-renderer.domElement.addEventListener('click', e=>{
+
+const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2();
+const tooltip=document.getElementById('tooltip');
+addEventListener('mousemove', e=>{
+  mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+  tooltip.style.left=e.clientX+14+'px'; tooltip.style.top=e.clientY+14+'px';
+});
+addEventListener('click', e=>{
   const m=new THREE.Vector2((e.clientX/innerWidth)*2-1, -(e.clientY/innerHeight)*2+1);
   ray.setFromCamera(m, camera);
-  const intersects=ray.intersectObjects(group.children, true);
-  if(intersects.length){
-    let obj=intersects[0].object;
-    while(obj.parent && !obj.userData.nome) obj=obj.parent;
-    if(obj.userData.nome) abrir(obj.userData);
+  const hits=ray.intersectObjects(group.children, true);
+  if(hits.length){
+    let o=hits[0].object; while(o.parent && !o.userData.nome) o=o.parent;
+    if(o.userData.nome){ alert(o.userData.nome + " - " + o.userData.desc + "\n\nAqui vai abrir o site: vitrine completa vem na próxima versão."); }
   }
 });
 
-window.setCat=(cat, btn)=>{
-  currentCat=cat; document.querySelectorAll('.filter').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); filtrar();
-}
-window.filtrar=()=>{
-  searchText=document.getElementById('search').value.toLowerCase();
-  markers.forEach(m=>{
-    const matchCat=currentCat==='TODOS' || m.cliente.categoria===currentCat;
-    const matchSearch=!searchText || m.cliente.nome.toLowerCase().includes(searchText);
-    const visible=matchCat && matchSearch;
-    m.mesh.visible=visible;
-  });
-}
-
-window.abrir=(c)=>{
-  document.getElementById('mCat').innerText=c.categoria.toUpperCase();
-  document.getElementById('mTitle').innerHTML=`${c.logo} ${c.nome}`;
-  document.getElementById('mDesc').innerText=c.desc;
-  document.getElementById('mImg').src=c.img;
-  document.getElementById('mStat1').innerText=c.categoria.toUpperCase();
-  document.getElementById('mTags').innerHTML=c.tags.map(t=>`<span style="padding:4px 8px; border-radius:100px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); color:#aab; font-size:0.55rem">${t}</span>`).join('');
-  document.getElementById('mVisit').onclick=()=>window.open(c.site,'_blank');
-  document.getElementById('clientModal').classList.add('on');
-  controls.autoRotate=false;
-}
-window.fechar=()=>{ document.getElementById('clientModal').classList.remove('on'); controls.autoRotate=true; }
-
-let t=0;
 function animate(){
-  requestAnimationFrame(animate); t+=0.016;
-  markers.forEach(m=>{
-    if(!m.mesh.visible) return;
-    m.mesh.position.y=m.y0+Math.sin(t*0.6+m.phase)*0.3;
-    m.base.rotation.y+=0.005;
-    m.ring.rotation.z+=0.01;
-    m.logo.position.y=1.2+Math.sin(t*1.2+m.phase)*0.15;
-    // hover effect
-    ray.setFromCamera(mouse, camera);
-    const hits=ray.intersectObject(m.mesh, true);
-    if(hits.length){
-      if(hovered!==m){ hovered=m; tooltip.innerHTML=`<b style="color:#${m.cliente.cor.toString(16).padStart(6,'0')}">${m.cliente.logo} ${m.cliente.nome}</b><br><span style="color:#8fb0d0">${m.cliente.categoria} • CLIQUE PARA EXPLORAR</span>`; tooltip.style.display='block'; document.body.style.cursor='pointer'; m.ring.material.opacity=1; m.lightBeam.material.opacity=0.4; }
-    }
+  requestAnimationFrame(animate);
+  group.children.forEach((g,i)=>{
+    g.position.y += Math.sin(Date.now()*0.001 + i)*0.002;
+    g.rotation.y += 0.005;
   });
-  // limpar tooltip se nada
+  controls.update();
+  renderer.render(scene,camera);
+  // tooltip hover
   ray.setFromCamera(mouse, camera);
-  if(!ray.intersectObjects(group.children,true).length && hovered){ tooltip.style.display='none'; document.body.style.cursor='crosshair'; if(hovered){ hovered.ring.material.opacity=0.6; hovered.lightBeam.material.opacity=0.18; } hovered=null; }
-
-  // parallax mouse
-  const mx=(mouse.x*0.5); const my=(mouse.y*0.3);
-  group.rotation.y+= (mx*0.1 - group.rotation.y)*0.02;
-  group.rotation.x+= (my*0.1 - group.rotation.x)*0.02;
-
-  controls.update(); renderer.render(scene,camera);
+  const inter=ray.intersectObjects(group.children, true);
+  if(inter.length){
+    let o=inter[0].object; while(o.parent && !o.userData.nome) o=o.parent;
+    if(o.userData.nome){ tooltip.innerHTML=`<b style="color:#${o.userData.cor.toString(16).padStart(6,'0')}">${o.userData.logo} ${o.userData.nome}</b><br><span style="color:#8ab">${o.userData.cat} • CLIQUE</span>`; tooltip.style.display='block'; }
+  } else { tooltip.style.display='none'; }
 }
 animate();
-
 addEventListener('resize', ()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
-
-// entrada some
-setTimeout(()=>{ document.getElementById('entry').classList.add('hide'); }, 2200);
 </script>
 </body>
 </html>
