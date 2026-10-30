@@ -22,7 +22,7 @@ body{background:#020208; color:#fff; font-family:'Inter',sans-serif; overflow-x:
 .hero{padding:50px 24px 20px; max-width:1280px; margin:0 auto}
 .hero h1{font-size:3.2rem; line-height:0.9; letter-spacing:-2px}
 .hero h1 span{color:#00aaff; text-shadow:0 0 30px #00aaff88}
-.hero p{color:#8fb0d0; font-family:'JetBrains Mono'; font-size:0.85rem; margin-top:14px; max-width:600px; line-height:1.6; border-left:2px solid #00aaff33; padding-left:12px}
+.hero p{color:#8fb0d0; font-family:'JetBrains Mono'; font-size:0.85rem; margin-top:14px; max-width:620px; line-height:1.6; border-left:2px solid #00aaff33; padding-left:12px}
 .controls{max-width:1280px; margin:20px auto; padding:0 24px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between}
 .searchBox{display:flex; align-items:center; gap:10px; background:rgba(10,25,55,0.9); border:1px solid #00aaff33; border-radius:100px; padding:12px 18px; width:340px; max-width:100%}
 .searchBox input{background:transparent; border:none; color:#fff; outline:none; width:100%; font-family:'JetBrains Mono'; font-size:0.8rem}
@@ -35,19 +35,18 @@ body{background:#020208; color:#fff; font-family:'Inter',sans-serif; overflow-x:
 .card{position:relative; background:linear-gradient(180deg, rgba(15,30,60,0.95), rgba(8,15,30,0.95)); border:1px solid rgba(0,170,255,0.18); border-radius:20px; overflow:hidden; transition:0.35s cubic-bezier(.16,1,.3,1); backdrop-filter:blur(10px)}
 .card:hover{transform:translateY(-6px); border-color:#00aaff; box-shadow:0 20px 60px rgba(0,170,255,0.25)}
 .cardImg{height:190px; position:relative; overflow:hidden; background:#000}
-.cardImg img{width:100%; height:100%; object-fit:cover; opacity:0.9; transition:0.5s}
-.card:hover .cardImg img{transform:scale(1.05)}
-.cardImg::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 30%, rgba(2,2,8,0.9) 100%)}
+.cardImg img{width:100%; height:100%; object-fit:cover; opacity:0.7; transition:0.5s; filter:grayscale(20%)}
+.card:hover .cardImg img{transform:scale(1.05); opacity:0.9; filter:grayscale(0%)}
+.cardImg::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 30%, rgba(2,2,8,0.95) 100%)}
 .tagCat{position:absolute; top:12px; left:12px; z-index:2; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.12); backdrop-filter:blur(8px); color:#fff; font-size:0.58rem; padding:5px 10px; border-radius:100px}
-.tagLive{position:absolute; top:12px; right:12px; z-index:2; background:#00ff88; color:#000; font-size:0.55rem; font-weight:800; padding:5px 10px; border-radius:100px; box-shadow:0 0 15px #00ff88}
+.tagLive{position:absolute; top:12px; right:12px; z-index:2; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.6); font-size:0.55rem; font-weight:700; padding:5px 10px; border-radius:100px}
 .cardBody{padding:18px 20px 20px}
-.cardBody h3{font-size:1.1rem; line-height:1.1; margin-bottom:6px}
+.cardBody h3{font-size:1.15rem; line-height:1.1; margin-bottom:6px}
 .cardBody h3 span{color:#00aaff}
 .cardBody p{color:#8fb0d0; font-size:0.75rem; line-height:1.5; min-height:42px; font-family:'JetBrains Mono'}
 .meta{display:flex; gap:6px; margin-top:14px; flex-wrap:wrap}
 .meta span{font-size:0.52rem; padding:4px 9px; border-radius:100px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#aab}
-.btnVisit{width:100%; margin-top:16px; padding:13px; border-radius:12px; border:1px solid #00aaff; background:transparent; color:#00aaff; font-weight:800; font-size:0.78rem; cursor:pointer; transition:0.25s}
-.btnVisit:hover{background:#00aaff; color:#fff; box-shadow:0 0 25px #00aaff88}
+.btnVisit{width:100%; margin-top:16px; padding:13px; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.4); font-weight:800; font-size:0.72rem; cursor:not-allowed; transition:0.25s; letter-spacing:1px}
 .footer{max-width:1280px; margin:0 auto; padding:0 24px 30px; text-align:center; color:rgba(255,255,255,0.25); font-size:0.6rem; font-family:'JetBrains Mono'}
 @media(max-width:1100px){.gridSites{grid-template-columns:repeat(2,1fr)} .hero h1{font-size:2.6rem}}
 @media(max-width:640px){.gridSites{grid-template-columns:1fr} .header{flex-direction:column; align-items:flex-start} .hero h1{font-size:2.1rem} .controls{flex-direction:column; align-items:stretch} .searchBox{width:100%}}
@@ -61,32 +60,33 @@ body{background:#020208; color:#fff; font-family:'Inter',sans-serif; overflow-x:
   <div class="logo">SITES<span style="color:#00aaff">MIND</span> <span class="mono" style="font-size:0.6rem; color:#5a7a9b; font-weight:400; margin-left:8px">/ VITRINE</span></div>
   <div class="badgeTop">
     <span>● SYSTEM.MIND</span>
-    <span style="color:#00aaff; border-color:#00aaff44">TECH_BLUE</span>
-    <span class="live">● AO VIVO</span>
+ <span class="live">● AO VIVO</span>
   </div>
 </div>
 <div class="hero">
-  <h1>VITRINE DE<br><span>EXPERIÊNCIAS DIGITAIS</span></h1>
-  <p>Selecione o que você procura e veja os sites reais criados pela MIND. Todos otimizados para o Google, com design premium e tecnologia que vende 24h.</p>
+  <h1>CATEGORIAS DE<br><span>SITES QUE CRIAMOS</span></h1>
+  <p>Não inventamos clientes. Abaixo estão os tipos de negócio que atendemos. Cada card é um modelo de site que desenvolvemos sob medida para o seu segmento. Projetos reais você vê no @sitesmind.</p>
 </div>
 <div class="controls">
-  <div class="searchBox">🔍 <input id="search" placeholder="PESQUISAR EMPRESA..." oninput="render()"></div>
+  <div class="searchBox">🔍 <input id="search" placeholder="PESQUISAR CATEGORIA..." oninput="render()"></div>
   <div class="filters" id="filters"></div>
 </div>
 <div class="gridSites" id="grid"></div>
-<div class="footer">MIND • VITRINE OFICIAL • PROTOCOLO TECH BLUE • SAPIRANGA-RS • BUILD 54 • ONLINE</div>
+<div class="footer">MIND • VITRINE OFICIAL • SAPIRANGA-RS • DESDE 2025 • TODOS OS MODELOS SOB CONSULTA NO INSTA @sitesmind</div>
 <script>
-const CLIENTES = [
-  {nome:"Sushi Master Sapiranga", categoria:"Restaurantes", logo:"🍣", desc:"Restaurante japonês premium com cardápio digital e pedido no WhatsApp.", img:"https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800", site:"https://example.com", tags:["DELIVERY","PREMIUM","CARDÁPIO"]},
-  {nome:"Barbearia Old Money", categoria:"Barbearias", logo:"💈", desc:"Barbearia clássica com agendamento online e bar interno.", img:"https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800", site:"https://example.com", tags:["AGENDAMENTO","ESTILO","CLÁSSICA"]},
-  {nome:"FitPower Academia", categoria:"Academias", logo:"🏋️", desc:"Academia 24h com planos, fotos reais e matrícula pelo site.", img:"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800", site:"https://example.com", tags:["24H","PLANOS","TREINO"]},
-  {nome:"Bella Moda Store", categoria:"Lojas", logo:"👗", desc:"Loja de moda feminina com vitrine virtual e provador de looks.", img:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800", site:"https://example.com", tags:["MODA","VITRINE","LOJA"]},
-  {nome:"Advocacia Silva & Costa", categoria:"Escritórios", logo:"⚖️", desc:"Escritório de advocacia com atendimento online e áreas de atuação.", img:"https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800", site:"https://example.com", tags:["ADVOCACIA","ONLINE","CONSULTA"]},
-  {nome:"AutoPrime Oficina", categoria:"Serviços", logo:"🔧", desc:"Oficina mecânica com diagnóstico computadorizado e guincho.", img:"https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800", site:"https://example.com", tags:["MECÂNICA","GUINCHO","SERVIÇO"]},
-  {nome:"Marmoris Móveis", categoria:"Empresas", logo:"🪑", desc:"Móveis planejados com projeto 3D e orçamento no site.", img:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800", site:"https://example.com", tags:["PLANEJADOS","3D","EMPRESA"]},
-  {nome:"Dra. Lais Estética", categoria:"Marcas pessoais", logo:"✨", desc:"Clínica de estética com procedimentos e antes/depois.", img:"https://images.unsplash.com/photo-1570172619644-dfd03ed1350b?w=800", site:"https://example.com", tags:["ESTÉTICA","BELEZA","CLÍNICA"]},
+const CATEGORIAS_MODELO = [
+  {nome:"Restaurantes", categoria:"Alimentação", logo:"🍣", desc:"Site com cardápio digital, botão de WhatsApp e fotos do prato. Ideal pra delivery e restaurante.", img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800", tags:["CARDÁPIO","WHATSAPP","DELIVERY"]},
+  {nome:"Barbearias", categoria:"Beleza", logo:"💈", desc:"Modelo com galeria de cortes, tabela de preços e agendamento direto no WhatsApp.", img:"https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800", tags:["AGENDAMENTO","GALERIA","BARBA"]},
+  {nome:"Academias", categoria:"Saúde", logo:"🏋️", desc:"Página com planos, horários, estrutura e matrícula online. Foco em conversão.", img:"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800", tags:["PLANOS","HORÁRIOS","24H"]},
+  {nome:"Lojas de Roupa", categoria:"Varejo", logo:"👗", desc:"Vitrine virtual com coleções, provador e link direto pro Instagram da loja.", img:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800", tags:["VITRINE","COLEÇÃO","MODA"]},
+  {nome:"Escritórios", categoria:"Serviços", logo:"⚖️", desc:"Site profissional e sério para advogados, contadores e consultorias. Transmite confiança.", img:"https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800", tags:["PROFISSIONAL","CONSULTA","CONFIANÇA"]},
+  {nome:"Oficinas e Auto", categoria:"Serviços", logo:"🔧", desc:"Modelo com serviços, guincho, avaliação no Google e contato rápido.", img:"https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800", tags:["SERVIÇOS","GUINCHO","ORÇAMENTO"]},
+  {nome:"Móveis Planejados", categoria:"Empresas", logo:"🪑", desc:"Portfólio com fotos de projetos, antes/depois e botão de orçamento 3D.", img:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800", tags:["PORTFÓLIO","3D","SOB MEDIDA"]},
+  {nome:"Clínicas e Estética", categoria:"Saúde", logo:"✨", desc:"Página clean com procedimentos, resultados e agendamento. Ideal para marcas pessoais.", img:"https://images.unsplash.com/photo-1570172619644-dfd03ed1350b?w=800", tags:["PROCEDIMENTOS","AGENDA","MARCA PESSOAL"]},
+  {nome:"Mercados e Lojas", categoria:"Varejo", logo:"🛒", desc:"Site simples e direto pra mercado, conveniência e loja de bairro vender mais.", img:"https://images.unsplash.com/photo-1604719312566-8912e9228c6a?w=800", tags:["OFERTAS","LOCAL","BAIRRO"]},
 ];
-const categorias=["TODOS", ...new Set(CLIENTES.map(c=>c.categoria))];
+
+const categorias=["TODOS", ...new Set(CATEGORIAS_MODELO.map(c=>c.categoria))];
 let catAtual="TODOS";
 const filtersDiv=document.getElementById('filters');
 filtersDiv.innerHTML=categorias.map(c=>`<button class="filter ${c===catAtual?'on':''}" onclick="setCat('${c}')">${c.toUpperCase()}</button>`).join('');
@@ -98,9 +98,9 @@ function setCat(c){
 function render(){
   const q=document.getElementById('search').value.toLowerCase();
   const grid=document.getElementById('grid');
-  const lista=CLIENTES.filter(c=>{
+  const lista=CATEGORIAS_MODELO.filter(c=>{
     const okCat=catAtual==="TODOS" || c.categoria===catAtual;
-    const okSearch=!q || c.nome.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q);
+    const okSearch=!q || c.nome.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q) || c.categoria.toLowerCase().includes(q);
     return okCat && okSearch;
   });
   grid.innerHTML=lista.map(c=>`
@@ -108,16 +108,16 @@ function render(){
       <div class="cardImg">
         <img src="${c.img}" loading="lazy">
         <div class="tagCat">${c.logo} ${c.categoria.toUpperCase()}</div>
-        <div class="tagLive">● AO VIVO</div>
+        <div class="tagLive">MODELO</div>
       </div>
       <div class="cardBody">
         <h3>${c.nome}</h3>
         <p>${c.desc}</p>
         <div class="meta">${c.tags.map(t=>`<span>${t}</span>`).join('')}</div>
-        <button class="btnVisit" onclick="window.open('${c.site}','_blank')">EXPLORAR EXPERIÊNCIA →</button>
+        <button class="btnVisit">EM BREVE</button>
       </div>
     </div>
-  `).join('') || `<div style="grid-column:1/-1; text-align:center; color:#5a7a9b; padding:40px; font-family:'JetBrains Mono'">Nenhuma empresa encontrada para "${q}" em ${catAtual}</div>`;
+  `).join('') || `<div style="grid-column:1/-1; text-align:center; color:#5a7a9b; padding:40px; font-family:'JetBrains Mono'">Nenhuma categoria encontrada para "${q}"</div>`;
 }
 render();
 </script>

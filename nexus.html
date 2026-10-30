@@ -134,7 +134,7 @@ body{background:var(--bg);color:var(--white);font-family:"Space Grotesk",sans-se
 <a href="mind-dimensions.html">DIMENSIONS</a>
 <a href="genesis.html">GENESIS</a>
 <a href="#lab">LAB</a>
-<button class="btnHeader mono" onclick="window.open('https://wa.me/5551999999999','_blank')">CRIAR EXPERIÊNCIA</button>
+<button class="btnHeader mono" onclick="window.open('https://ig.me/m/sitesmind','_blank')">CRIAR EXPERIÊNCIA</button>
 </div>
 </header>
 
@@ -146,7 +146,7 @@ body{background:var(--bg);color:var(--white);font-family:"Space Grotesk",sans-se
 <p>Este hero tem um portal 3D violeta real atrás, com shader e partículas que seguem seu mouse. Mova o cursor e veja.</p>
 <div class="heroBtns">
 <button class="btnPrimary mono" onclick="document.getElementById('lab').scrollIntoView()">EXPERIMENTAR AGORA →</button>
-<button class="btnSecondary mono" onclick="window.open('https://wa.me/5551999999999','_blank')">QUERO UM SITE ASSIM</button>
+<button class="btnSecondary mono" onclick="window.open('https://ig.me/m/sitesmind','_blank')">QUERO UM SITE ASSIM</button>
 </div>
 </div>
 <div class="heroRight reveal">
@@ -178,7 +178,7 @@ body{background:var(--bg);color:var(--white);font-family:"Space Grotesk",sans-se
 <h2>FEITO PARA <span>SER SENTIDO, NÃO SÓ VISTO.</span></h2>
 <p>Agora cada interação tem luz, sombra e física. É assim que seu cliente vai se sentir.</p>
 <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-<button class="btnPrimary mono" onclick="window.open('https://wa.me/5551999999999','_blank')">CRIAR MINHA EXPERIÊNCIA →</button>
+<button class="btnPrimary mono" onclick="window.open('https://ig.me/m/sitesmind','_blank')">CRIAR MINHA EXPERIÊNCIA →</button>
 <button class="btnSecondary mono" onclick="location.href='mind-dimensions.html'">VOLTAR AO UNIVERSO</button>
 </div>
 </div>
@@ -283,7 +283,6 @@ function drawLines(){
   envCtx.strokeStyle='rgba(168,85,247,0.18)';
   envCtx.lineWidth=1;
   for(let i=0;i<pts.length;i++){ for(let j=i+1;j<pts.length;j++){ envCtx.beginPath(); envCtx.moveTo(pts[i].x, pts[i].y); envCtx.lineTo(pts[j].x, pts[j].y); envCtx.stroke(); } }
-  // linha para mouse
   if(activeDot){
     envCtx.strokeStyle='rgba(168,85,247,0.45)';
     envCtx.setLineDash([4,6]);
@@ -328,7 +327,6 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 
 const isMobile=window.innerWidth<700;
 
-// HERO PORTAL 3D VIOLETA REAL COM SHADER
 function initHeroPortal(){
   const canvas=document.getElementById('heroCanvas');
   if(!canvas) return;
@@ -350,7 +348,6 @@ function initHeroPortal(){
   scene.add(new THREE.AmbientLight(0xffffff, 0.6));
   const dir=new THREE.DirectionalLight(0xffffff, 0.8); dir.position.set(3,5,4); scene.add(dir);
 
-  // portal violeta com shader vortex
   const vortexMat=new THREE.ShaderMaterial({
     uniforms:{time:{value:0}, color:{value:new THREE.Color(0xA855F7)}},
     vertexShader:`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
@@ -376,7 +373,6 @@ function initHeroPortal(){
   const ring2=new THREE.Mesh(new THREE.TorusGeometry(1.7,0.02,12,48), new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.4}));
   ring2.position.copy(vortex.position); ring2.position.z+=0.06; scene.add(ring2);
 
-  // partículas que seguem mouse
   const pCount=isMobile?80:150;
   const pGeo=new THREE.BufferGeometry();
   const pPos=new Float32Array(pCount*3);
@@ -432,7 +428,6 @@ function initHeroPortal(){
 }
 initHeroPortal();
 
-// particulas simples para opening e cta
 function simpleParticles(canvas, count, color){
   const c=document.getElementById(canvas);
   if(!c) return;
