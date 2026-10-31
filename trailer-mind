@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIND - Trailer Oficial</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#02010a;overflow:hidden;height:100vh;width:100vw;font-family:'Poppins',sans-serif;display:grid;place-items:center;color:#fff}
+canvas#bg{position:absolute;inset:0;width:100%;height:100%}
+.center{position:relative;z-index:2;text-align:center;pointer-events:none}
+.word{font-size:clamp(32px,9vw,110px);font-weight:900;line-height:.85;letter-spacing:-0.05em;text-shadow:0 0 40px #a855f788}
+.small{font-family:'JetBrains Mono';font-size:11px;letter-spacing:4px;color:#a855f7;margin-top:18px;opacity:.9}
+.globe{width:min(62vw,420px);height:min(62vw,420px);border-radius:50%;margin:0 auto 28px;border:1.5px solid #a855f799;box-shadow:0 0 120px #a855f788,inset 0 0 60px #06b6d433;background:radial-gradient(circle at 30% 30%, #2e1f78, #08031a);position:relative}
+.globe::after{content:'';position:absolute;inset:15%;border:1px dashed #06b6d488;border-radius:50%;animation:spin 10s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#bar{position:absolute;bottom:0;left:0;height:4px;background:linear-gradient(90deg,#a855f7,#06b6d4);width:0%;z-index:10;transition:width .2s linear}
+#controls{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:10px}
+button{font-family:'Poppins';background:linear-gradient(90deg,#a855f7,#06b6d4);border:0;color:#fff;padding:12px 22px;border-radius:99px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 10px 30px #a855f766;pointer-events:auto}
+button.sec{background:#ffffff14;box-shadow:none}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<canvas id="bg"></canvas>
+<div class="center" id="scene"></div>
+<div id="controls">
+  <button id="btnRec">● GRAVAR E BAIXAR VÍDEO</button>
+  <button class="sec" onclick="location.reload()">REPLAY</button>
+</div>
+
+<script>
+// FUNDO PARTICULAS MIND
+const c=document.getElementById('bg'), x=c.getContext('2d');
+function resize(){c.width=innerWidth; c.height=innerHeight} resize(); onresize=resize;
+let pts=[...Array(90)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7}));
+(function loop(){x.clearRect(0,0,c.width,c.height); pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy; if(p.x<0||p.x>c.width)p.vx*=-1; if(p.y<0||p.y>c.height)p.vy*=-1; x.fillStyle='#a855f733'; x.beginPath(); x.arc(p.x,p.y,1.8,0,Math.PI*2); x.fill()}); requestAnimationFrame(loop)})();
+
+// ROTEIRO
+const words=["RESPONSABILIDADE","CRIATIVIDADE","CONTEXTO","LIDERANÇA","ÉTICA","ARQUITETURA","HISTÓRIA"];
+const scene=document.getElementById('scene'), bar=document.getElementById('bar');
+let idx=0;
+function show(i){
+  bar.style.width=((i+1)/(words.length+1)*100)+'%';
+  if(i<words.length){
+    scene.innerHTML=`<div class="word">${words[i]}</div><div class="small">MIND://SYSTEM_${i+1}_OK</div>`;
+  }else{
+    scene.innerHTML=`<div class="globe"></div><div class="word" style="font-size:clamp(28px,6vw,64px)">ISSO É A <span style="background:linear-gradient(90deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">MIND</span></div><div class="small">TRÊS DIMENSÕES. UM NOVO UNIVERSO DIGITAL.</div>`;
+    bar.style.width='100%';
+  }
+}
+show(0);
+setInterval(()=>{idx++; if(idx>words.length) idx=0; show(idx)}, 1200);
+
+// GRAVAR SEM PRECISAR DE OBS - BAIXA WEBM DIRETO
+let rec, chunks=[], gravando=false;
+document.getElementById('btnRec').onclick = async function(){
+  if(!gravando){
+    const stream = await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});
+    rec = new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});
+    chunks=[];
+    rec.ondataavailable=e=>{if(e.data.size>0) chunks.push(e.data)};
+    rec.onstop=()=>{
+      const blob=new Blob(chunks,{type:'video/webm'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='MIND-trailer-oficial.webm'; a.click();
+    };
+    rec.start(100);
+    gravando=true; this.textContent='■ PARAR E BAIXAR'; this.style.background='#ef4444';
+  }else{
+    rec.stop(); rec.stream.getTracks().forEach(t=>t.stop());
+    gravando=false; this.textContent='● GRAVAR E BAIXAR VÍDEO'; this.style.background='';
+  }
+};
+</script>
+</body>
+</html>

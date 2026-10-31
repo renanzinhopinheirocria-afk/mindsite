@@ -2,131 +2,374 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIND - VITRINE DE SITES</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>MIND OMEGA — O Próximo Nível</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <style>
+:root{--bg:#05010a;--violet:#A855F7;--violet2:#d8b4fe;--violetDeep:#6d28d9;--white:#f8f5ff;--muted:#9a8ab8;--border:#ffffff10;--glass:rgba(18,10,32,.72)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#020208; color:#fff; font-family:'Inter',sans-serif; overflow-x:hidden}
-.mono{font-family:'JetBrains Mono'}
-.bg{position:fixed; inset:0; z-index:-1; background:radial-gradient(ellipse at top, rgba(0,170,255,0.18), transparent 55%), radial-gradient(ellipse at bottom right, rgba(124,92,255,0.15), transparent 60%), #020208}
-.grid{position:fixed; inset:0; z-index:-1; background:linear-gradient(rgba(0,170,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,170,255,0.04) 1px, transparent 1px); background-size:32px 32px; opacity:0.4}
-.scan{position:fixed; top:0; left:0; width:100%; height:2px; background:linear-gradient(90deg, transparent, #00aaff, #7c5cff, transparent); box-shadow:0 0 20px #00aaff; animation:scan 4s linear infinite; z-index:5}
-@keyframes scan{0%{top:0%} 100%{top:100%}}
-.header{position:sticky; top:0; z-index:10; backdrop-filter:blur(20px); background:rgba(2,2,8,0.8); border-bottom:1px solid rgba(0,170,255,0.15); padding:18px 24px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap}
-.logo{font-weight:900; font-size:1.6rem; letter-spacing:-1px}
-.logo b{color:#00aaff; text-shadow:0 0 20px #00aaff}
-.badgeTop{display:flex; gap:8px; align-items:center}
-.badgeTop span{font-size:0.58rem; padding:5px 10px; border-radius:100px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); color:#8aa}
-.badgeTop .live{background:#00ff88; color:#000; border-color:#00ff88; font-weight:700; box-shadow:0 0 12px #00ff88}
-.hero{padding:50px 24px 20px; max-width:1280px; margin:0 auto}
-.hero h1{font-size:3.2rem; line-height:0.9; letter-spacing:-2px}
-.hero h1 span{color:#00aaff; text-shadow:0 0 30px #00aaff88}
-.hero p{color:#8fb0d0; font-family:'JetBrains Mono'; font-size:0.85rem; margin-top:14px; max-width:620px; line-height:1.6; border-left:2px solid #00aaff33; padding-left:12px}
-.controls{max-width:1280px; margin:20px auto; padding:0 24px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between}
-.searchBox{display:flex; align-items:center; gap:10px; background:rgba(10,25,55,0.9); border:1px solid #00aaff33; border-radius:100px; padding:12px 18px; width:340px; max-width:100%}
-.searchBox input{background:transparent; border:none; color:#fff; outline:none; width:100%; font-family:'JetBrains Mono'; font-size:0.8rem}
-.searchBox input::placeholder{color:#5a7a9b}
-.filters{display:flex; gap:8px; flex-wrap:wrap}
-.filter{padding:9px 16px; border-radius:100px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); color:#8aa; font-size:0.68rem; font-weight:700; cursor:pointer; transition:0.2s; letter-spacing:0.5px}
-.filter:hover{border-color:#00aaff66; color:#fff}
-.filter.on{background:#00aaff; color:#fff; border-color:#00aaff; box-shadow:0 0 20px #00aaff66}
-.gridSites{max-width:1280px; margin:24px auto 60px; padding:0 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
-.card{position:relative; background:linear-gradient(180deg, rgba(15,30,60,0.95), rgba(8,15,30,0.95)); border:1px solid rgba(0,170,255,0.18); border-radius:20px; overflow:hidden; transition:0.35s cubic-bezier(.16,1,.3,1); backdrop-filter:blur(10px)}
-.card:hover{transform:translateY(-6px); border-color:#00aaff; box-shadow:0 20px 60px rgba(0,170,255,0.25)}
-.cardImg{height:190px; position:relative; overflow:hidden; background:#000}
-.cardImg img{width:100%; height:100%; object-fit:cover; opacity:0.7; transition:0.5s; filter:grayscale(20%)}
-.card:hover .cardImg img{transform:scale(1.05); opacity:0.9; filter:grayscale(0%)}
-.cardImg::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 30%, rgba(2,2,8,0.95) 100%)}
-.tagCat{position:absolute; top:12px; left:12px; z-index:2; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.12); backdrop-filter:blur(8px); color:#fff; font-size:0.58rem; padding:5px 10px; border-radius:100px}
-.tagLive{position:absolute; top:12px; right:12px; z-index:2; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.6); font-size:0.55rem; font-weight:700; padding:5px 10px; border-radius:100px}
-.cardBody{padding:18px 20px 20px}
-.cardBody h3{font-size:1.15rem; line-height:1.1; margin-bottom:6px}
-.cardBody h3 span{color:#00aaff}
-.cardBody p{color:#8fb0d0; font-size:0.75rem; line-height:1.5; min-height:42px; font-family:'JetBrains Mono'}
-.meta{display:flex; gap:6px; margin-top:14px; flex-wrap:wrap}
-.meta span{font-size:0.52rem; padding:4px 9px; border-radius:100px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#aab}
-.btnVisit{width:100%; margin-top:16px; padding:13px; border-radius:12px; border:1px solid #00aaff; background:transparent; color:#00aaff; font-weight:800; font-size:0.72rem; cursor:pointer; transition:0.25s; letter-spacing:0.5px}
-.btnVisit:hover{background:#00aaff; color:#fff; box-shadow:0 0 20px #00aaff88}
-.footer{max-width:1280px; margin:0 auto; padding:0 24px 30px; text-align:center; color:rgba(255,255,255,0.25); font-size:0.6rem; font-family:'JetBrains Mono'}
-@media(max-width:1100px){.gridSites{grid-template-columns:repeat(2,1fr)} .hero h1{font-size:2.6rem}}
-@media(max-width:640px){.gridSites{grid-template-columns:1fr} .header{flex-direction:column; align-items:flex-start} .hero h1{font-size:2.1rem} .controls{flex-direction:column; align-items:stretch} .searchBox{width:100%}}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--white);font-family:"Space Grotesk",sans-serif;overflow-x:hidden;width:100%;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+.mono{font-family:"JetBrains Mono",monospace}
+#opening{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 50%, #1a0b2e 0%, #070412 55%, #02020a 100%);transition:opacity .8s cubic-bezier(.16,1,.3,1), visibility .8s}
+#opening.hide{opacity:0;visibility:hidden;pointer-events:none}
+#openingCanvas{position:absolute;inset:0;width:100%;height:100%}
+.openContent{position:relative;z-index:2;text-align:center;padding:24px;max-width:100vw}
+.openPortalOmega{width:110px;height:110px;margin:0 auto 20px;border-radius:50%;background:radial-gradient(circle, #fff 0%, #A855F7 25%, #3a1a6b 60%, transparent 75%);box-shadow:0 0 60px #A855F7aa, 0 0 120px #A855F744, inset 0 0 30px #ffffff66;animation:omegaPulse 2.2s ease-in-out infinite;position:relative}
+.openPortalOmega::after{content:'';position:absolute;inset:-18px;border-radius:50%;border:1px solid #A855F744;animation:omegaRing 3s linear infinite}
+@keyframes omegaPulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.08);filter:brightness(1.2)}}
+@keyframes omegaRing{0%{transform:scale(.9);opacity:1}100%{transform:scale(1.25);opacity:0}}
+.openTitle{font-size:clamp(2.8rem,8vw,4.8rem);font-weight:700;line-height:.9;letter-spacing:-.07em}
+.openTitle span{background:linear-gradient(90deg,#fff,#A855F7,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.openPhrase{font-size:clamp(.65rem,2.5vw,.78rem);letter-spacing:1.4px;color:#b89ad6;line-height:1.7;max-width:560px;margin:16px auto 0;padding:0 12px;opacity:.9}
+.btnOpen{margin-top:28px;padding:15px 32px;border:1px solid var(--violet);border-radius:99px;background:linear-gradient(180deg,rgba(168,85,247,.18),rgba(168,85,247,.06));color:#fff;font:700 .7rem "JetBrains Mono";letter-spacing:2.5px;cursor:pointer;transition:.3s;box-shadow:0 0 20px #A855F722}
+.btnOpen:hover{background:var(--violet);color:#000;box-shadow:0 0 30px #A855F766;transform:translateY(-2px)}
+
+.header{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:space-between;align-items:center;padding:14px clamp(16px,3vw,36px);background:rgba(5,1,10,.82);border-bottom:1px solid #ffffff0a;backdrop-filter:blur(20px) saturate(1.2)}
+.logo{font-weight:700;font-size:1.2rem;letter-spacing:-.03em;display:flex;align-items:center;gap:8px}
+.logo i{width:8px;height:8px;border-radius:50%;background:var(--violet);box-shadow:0 0 10px var(--violet);display:inline-block;animation:orbPulse 2s infinite}
+.logo span{color:var(--violet)}
+.nav{display:flex;gap:22px;align-items:center}
+.nav a{font:.58rem "JetBrains Mono";color:#9a8ab8;text-decoration:none;letter-spacing:1px;transition:.2s;position:relative}
+.nav a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--violet);transition:.25s}
+.nav a:hover{color:#fff}.nav a:hover::after{width:100%}
+.btnHeader{padding:10px 20px;border:1px solid var(--violet);border-radius:99px;background:transparent;color:var(--violet2);font:700 .6rem "JetBrains Mono";cursor:pointer;transition:.25s}
+.btnHeader:hover{background:var(--violet);color:#000;box-shadow:0 0 22px #A855F744}
+.hamburger{display:none;width:44px;height:44px;border-radius:12px;border:1px solid #ffffff12;background:rgba(255,255,255,.05);place-items:center;cursor:pointer;transition:.2s}
+.hamburger span{display:block;width:18px;height:2px;background:#fff;border-radius:2px;position:relative;transition:.25s}
+.hamburger span::before,.hamburger span::after{content:'';position:absolute;left:0;width:18px;height:2px;background:#fff;border-radius:2px;transition:.25s}
+.hamburger span::before{top:-6px}.hamburger span::after{top:6px}
+.hamburger.active span{background:transparent}
+.hamburger.active span::before{transform:rotate(45deg);top:0}
+.hamburger.active span::after{transform:rotate(-45deg);top:0}
+.mobileMenu{position:fixed;inset:0;top:62px;z-index:79;background:rgba(5,1,10,.97);backdrop-filter:blur(24px);padding:28px;display:grid;align-content:start;gap:20px;transform:translateY(-110%);transition:.5s cubic-bezier(.16,1,.3,1);border-top:1px solid #ffffff0a}
+.mobileMenu.open{transform:translateY(0)}
+.mobileMenu a{font:600 1.25rem "Space Grotesk";color:#fff;text-decoration:none;padding:16px 0;border-bottom:1px solid #ffffff08;letter-spacing:-.03em;display:flex;justify-content:space-between;align-items:center}
+.mobileMenu a::after{content:'→';font:1rem "JetBrains Mono";color:var(--violet)}
+
+#hero{position:relative;min-height:100svh;padding:120px clamp(16px,4vw,56px) 60px;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,48px);align-items:center;overflow:hidden;background:radial-gradient(ellipse at 80% 15%, #1f0f3d 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, #1a0b2e 0%, transparent 40%), var(--bg)}
+#heroCanvas{position:absolute;inset:0;z-index:0;width:100%;height:100%;display:block;pointer-events:none}
+.heroLeft{position:relative;z-index:2;min-width:0}
+.heroLabel{font:.62rem "JetBrains Mono";letter-spacing:3.5px;color:var(--violet2);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.heroLabel::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--violet),transparent);display:inline-block}
+.heroLeft h1{font-size:clamp(2rem,4.6vw,4rem);line-height:.92;letter-spacing:-.06em;font-weight:700;max-width:100%}
+.heroLeft h1 span{background:linear-gradient(90deg,#fff 0%,#A855F7 50%,#d8b4fe 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.heroLeft p{font:clamp(.88rem,2.4vw,.98rem)/1.75 "Space Grotesk";color:var(--muted);margin-top:18px;max-width:520px}
+.heroBtns{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.btnOmegaPrimary{padding:16px 28px;border-radius:99px;background:linear-gradient(180deg,#A855F7,#7c3aed);border:1px solid #A855F7;color:#000;font:700 .7rem "JetBrains Mono";cursor:pointer;transition:.3s;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 24px #A855F744}
+.btnOmegaPrimary:hover{transform:translateY(-3px);box-shadow:0 14px 36px #A855F766}
+.btnOmegaSecondary{padding:16px 28px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid #ffffff18;color:#fff;font:700 .7rem "JetBrains Mono";cursor:pointer;transition:.3s;display:inline-flex;align-items:center;backdrop-filter:blur(10px)}
+.btnOmegaSecondary:hover{background:rgba(255,255,255,.1);border-color:#ffffff30}
+
+.heroRight{position:relative;z-index:2;display:grid;place-items:center;min-width:0;width:100%}
+.omegaStage{position:relative;width:min(100%,560px);aspect-ratio:1/1;perspective:1400px;touch-action:none;max-width:100%;display:grid;place-items:center}
+.omegaCore{width:72%;aspect-ratio:1/1;border-radius:32px;background:linear-gradient(145deg,rgba(24,12,48,.9),rgba(10,6,28,.9));border:1px solid #A855F722;box-shadow:0 30px 80px #000a, 0 0 50px #A855F722, inset 0 1px 0 #ffffff12;backdrop-filter:blur(18px);padding:18px;display:grid;gap:10px;transform-style:preserve-3d;will-change:transform;position:relative;overflow:hidden}
+.omegaCore::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%), rgba(168,85,247,.18), transparent 55%);opacity:0;transition:opacity .2s;pointer-events:none}
+.omegaCore:hover::before{opacity:1}
+.omegaFloat{position:absolute;width:42%;aspect-ratio:4/3.2;border-radius:18px;background:linear-gradient(145deg,rgba(32,16,64,.92),rgba(16,10,38,.92));border:1px solid #A855F744;box-shadow:0 20px 60px #0008, 0 0 30px #A855F722;backdrop-filter:blur(14px);padding:12px;display:grid;gap:8px;transform-style:preserve-3d;will-change:transform}
+.omegaFloat:nth-child(2){left:-8%;top:8%;transform:rotateY(-18deg) rotateX(10deg)}
+.omegaFloat:nth-child(3){right:-8%;bottom:8%;transform:rotateY(16deg) rotateX(6deg)}
+.bar{height:8px;width:44%;background:linear-gradient(90deg,#A855F7,#ffffff22);border-radius:4px}.line{height:6px;background:#ffffff12;border-radius:4px}
+.orb{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--violet);box-shadow:0 0 16px var(--violet);top:-8px;right:-8px;animation:orbPulse 2s infinite}
+
+.section{padding:90px clamp(16px,4vw,56px);position:relative;max-width:1300px;margin:0 auto;width:100%}
+.sectionHeader{text-align:center;max-width:760px;margin:0 auto 48px;padding:0 8px}
+.sectionHeader .label{font:.62rem "JetBrains Mono";letter-spacing:3.5px;color:var(--violet2);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px;background:rgba(168,85,247,.08);border:1px solid #A855F722;padding:6px 14px;border-radius:99px}
+.sectionHeader h2{font-size:clamp(1.8rem,3.8vw,2.9rem);line-height:1.05;letter-spacing:-.05em}
+.sectionHeader p{font:clamp(.85rem,2.3vw,.92rem)/1.7 "Space Grotesk";color:var(--muted);margin-top:14px}
+
+.omegaGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;width:100%}
+.omegaCard{position:relative;border-radius:24px;background:linear-gradient(145deg,rgba(18,10,32,.9),rgba(10,6,24,.92));border:1px solid var(--border);padding:26px;overflow:hidden;min-height:400px;display:flex;flex-direction:column;width:100%;min-width:0;transition:.35s cubic-bezier(.16,1,.3,1);box-shadow:0 10px 40px #0005}
+.omegaCard:hover{border-color:#A855F744;transform:translateY(-4px);box-shadow:0 20px 60px #0008, 0 0 30px #A855F722}
+.omegaCard h3{font-size:clamp(1rem,2.6vw,1.18rem);margin-bottom:8px;line-height:1.25;letter-spacing:-.02em}
+.omegaCard .labDesc{font:.68rem/1.6 "JetBrains Mono";color:#9a8ab8;margin-bottom:16px}
+.omegaArea{flex:1;position:relative;border-radius:16px;background:rgba(0,0,0,.42);border:1px solid #ffffff08;overflow:hidden;display:grid;place-items:center;min-height:260px;touch-action:none;width:100%}
+
+#ctaOmega{position:relative;padding:110px clamp(18px,4vw,56px);background:radial-gradient(ellipse at 50% 0%, #1f0f3d 0%, #0e0828 48%, #05010a 100%);overflow:hidden;text-align:center;border-top:1px solid #ffffff08}
+#ctaCanvas{position:absolute;inset:0;opacity:.55;width:100%;height:100%;pointer-events:none}
+.ctaContent{position:relative;z-index:2;max-width:780px;margin:0 auto;padding:0 10px}
+.ctaContent h2{font-size:clamp(1.9rem,4.5vw,3.4rem);line-height:.95;letter-spacing:-.05em}
+.ctaContent h2 span{background:linear-gradient(90deg,#fff,#A855F7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.footer{padding:32px clamp(18px,4vw,56px);background:#05010a;border-top:1px solid #ffffff0a;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+.footer .mono{font-size:.6rem;color:#6b5a8a}
+.footer a{color:#9a8ab8;text-decoration:none;font:.6rem "JetBrains Mono"}
+.footer a:hover{color:#fff}
+.reveal{opacity:0;transform:translateY(22px);transition:.8s cubic-bezier(.16,1,.3,1)}
+.reveal.on{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){
+ .nav{display:none}
+ .hamburger{display:grid}
+ #hero{grid-template-columns:1fr;padding-top:100px;min-height:auto;padding-bottom:36px}
+ .heroRight{order:-1;margin-bottom:10px}
+ .omegaStage{aspect-ratio:auto;min-height:380px;display:flex;flex-direction:column;gap:16px;perspective:none}
+ .omegaCore{width:100%;max-width:380px;order:1;transform:none !important;aspect-ratio:auto;min-height:200px}
+ .omegaFloat{position:relative;width:100%;max-width:380px;left:auto !important;right:auto !important;top:auto !important;bottom:auto !important;transform:none !important}
+ .omegaGrid{grid-template-columns:1fr}
+ .omegaCard{grid-column:auto !important;min-height:auto}
+ .omegaCard[style*="span 2"]{grid-column:auto !important}
+}
+@media(max-width:480px){
+ .omegaStage{gap:12px}
+ .omegaFloat,.omegaCore{max-width:100%;border-radius:20px}
+ .heroLeft h1{font-size:2rem;line-height:.92}
+ .omegaCard{padding:20px;border-radius:20px}
+ .omegaArea{min-height:220px}
+ .btnOmegaPrimary,.btnOmegaSecondary{width:100%;justify-content:center;padding:16px 22px}
+ .heroBtns{flex-direction:column}
+ .openTitle{font-size:2.6rem}
+}
 </style>
 </head>
 <body>
-<div class="bg"></div>
-<div class="grid"></div>
-<div class="scan"></div>
-<div class="header">
-  <div class="logo">SITES<span style="color:#00aaff">MIND</span> <span class="mono" style="font-size:0.6rem; color:#5a7a9b; font-weight:400; margin-left:8px">/ VITRINE</span></div>
-  <div class="badgeTop">
-    <span>● SYSTEM.MIND</span>
-    <span style="color:#00aaff; border-color:#00aaff44">DESDE 2025</span>
-    <span class="live">● AO VIVO</span>
-  </div>
+<div id="opening">
+<canvas id="openingCanvas"></canvas>
+<div class="openContent">
+<div class="openPortalOmega"></div>
+<div class="openTitle">MIND<br><span>OMEGA</span></div>
+<div class="openPhrase mono">Você viu o NEXUS. Agora entre no OMEGA.<br>O próximo nível de experiência digital.</div>
+<button class="btnOpen mono" id="btnOpen">[ ENTRAR NO OMEGA ]</button>
 </div>
-<div class="hero">
-  <h1>CATEGORIAS DE<br><span>SITES QUE CRIAMOS</span></h1>
-  <p>Não inventamos clientes. Abaixo estão os tipos de negócio que atendemos. Cada card é um modelo de site que desenvolvemos sob medida para o seu segmento. Projetos reais você vê no @sitesmind.</p>
 </div>
-<div class="controls">
-  <div class="searchBox">🔍 <input id="search" placeholder="PESQUISAR CATEGORIA..." oninput="render()"></div>
-  <div class="filters" id="filters"></div>
-</div>
-<div class="gridSites" id="grid"></div>
-<div class="footer">MIND • VITRINE OFICIAL • DESDE 2025 • TODOS OS MODELOS SOB CONSULTA NO INSTA @sitesmind</div>
-<script>
-const CATEGORIAS_MODELO = [
-  {nome:"Restaurantes", categoria:"Alimentação", logo:"🍣", desc:"Site com cardápio digital, botão de WhatsApp e fotos do prato. Ideal pra delivery e restaurante.", img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800", tags:["CARDÁPIO","WHATSAPP","DELIVERY"]},
-  {nome:"Barbearias", categoria:"Beleza", logo:"💈", desc:"Modelo com galeria de cortes, tabela de preços e agendamento direto no WhatsApp.", img:"https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800", tags:["AGENDAMENTO","GALERIA","BARBA"]},
-  {nome:"Academias", categoria:"Saúde", logo:"🏋️", desc:"Página com planos, horários, estrutura e matrícula online. Foco em conversão.", img:"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800", tags:["PLANOS","HORÁRIOS","24H"]},
-  {nome:"Lojas de Roupa", categoria:"Varejo", logo:"👗", desc:"Vitrine virtual com coleções, provador e link direto pro Instagram da loja.", img:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800", tags:["VITRINE","COLEÇÃO","MODA"]},
-  {nome:"Escritórios", categoria:"Serviços", logo:"⚖️", desc:"Site profissional e sério para advogados, contadores e consultorias. Transmite confiança.", img:"https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800", tags:["PROFISSIONAL","CONSULTA","CONFIANÇA"]},
-  {nome:"Oficinas e Auto", categoria:"Serviços", logo:"🔧", desc:"Modelo com serviços, guincho, avaliação no Google e contato rápido.", img:"https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800", tags:["SERVIÇOS","GUINCHO","ORÇAMENTO"]},
-  {nome:"Móveis Planejados", categoria:"Empresas", logo:"🪑", desc:"Portfólio com fotos de projetos, antes/depois e botão de orçamento 3D.", img:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800", tags:["PORTFÓLIO","3D","SOB MEDIDA"]},
-  {nome:"Clínicas e Estética", categoria:"Saúde", logo:"✨", desc:"Página clean com procedimentos, resultados e agendamento. Ideal para marcas pessoais.", img:"https://images.unsplash.com/photo-1570172619644-dfd03ed1350b?w=800", tags:["PROCEDIMENTOS","AGENDA","MARCA PESSOAL"]},
-  {nome:"Mercados e Lojas", categoria:"Varejo", logo:"🛒", desc:"Site simples e direto pra mercado, conveniência e loja de bairro vender mais.", img:"https://images.unsplash.com/photo-1604719312566-8912e9228c6a?w=800", tags:["OFERTAS","LOCAL","BAIRRO"]},
-];
 
-const categorias=["TODOS", ...new Set(CATEGORIAS_MODELO.map(c=>c.categoria))];
-let catAtual="TODOS";
-const filtersDiv=document.getElementById('filters');
-filtersDiv.innerHTML=categorias.map(c=>`<button class="filter ${c===catAtual?'on':''}" onclick="setCat('${c}')">${c.toUpperCase()}</button>`).join('');
-function setCat(c){
-  catAtual=c;
-  document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('on', b.textContent===c.toUpperCase()));
-  render();
+<header class="header">
+<div class="logo"><i></i>MIND <span>OMEGA</span></div>
+<div class="nav">
+<a href="mind-dimensions.html">DIMENSIONS</a>
+<a href="#">NEXUS</a>
+<a href="#lab">OMEGA LAB</a>
+<button class="btnHeader mono" onclick="window.open('https://ig.me/m/sitesmind','_blank')">CRIAR OMEGA</button>
+</div>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span></button>
+</header>
+<div class="mobileMenu" id="mobileMenu">
+<a href="mind-dimensions.html">DIMENSIONS <span></span></a>
+<a href="#">NEXUS</a>
+<a href="#lab">OMEGA LAB</a>
+<button class="btnOmegaPrimary mono" onclick="window.open('https://ig.me/m/sitesmind','_blank')">CRIAR MEU OMEGA →</button>
+</div>
+
+<section id="hero">
+<canvas id="heroCanvas"></canvas>
+<div class="heroLeft reveal">
+<div class="heroLabel mono">PORTAL 03 • OMEGA • NÍVEL OUTRO MUNDO</div>
+<h1>O NEXUS ERA O COMEÇO.<br><span>O OMEGA É O FUTURO.</span></h1>
+<p>Shader real com buraco negro violeta, partículas gravitacionais, vidro com profundidade e física que responde ao seu toque. No celular, mais bonito ainda.</p>
+<div class="heroBtns">
+<button class="btnOmegaPrimary mono" onclick="document.getElementById('lab').scrollIntoView()">ENTRAR NO OMEGA →</button>
+<button class="btnOmegaSecondary mono" onclick="window.open('https://ig.me/m/sitesmind','_blank')">QUERO UM SITE OMEGA</button>
+</div>
+</div>
+<div class="heroRight reveal">
+<div class="omegaStage" id="omegaStage">
+<div class="omegaCore" id="coreA"><div class="bar"></div><div class="line" style="width:84%"></div><div class="line" style="width:62%"></div><div style="display:flex;gap:8px;margin-top:10px"><div class="line" style="flex:1;height:38px;border-radius:10px"></div><div class="line" style="flex:1;height:38px;border-radius:10px;background:linear-gradient(90deg,#A855F744,#ffffff08)"></div></div><div style="margin-top:10px;display:flex;gap:8px"><div class="line" style="flex:1;height:14px;background:#A855F7;border-radius:99px"></div><div class="line" style="flex:1;height:14px"></div></div><div class="orb"></div></div>
+<div class="omegaFloat" id="cardA"><div class="bar" style="width:36%"></div><div class="line" style="width:90%"></div><div class="line" style="height:42px;border-radius:10px;margin-top:6px"></div><div class="line" style="width:60%;height:10px;background:#A855F7;border-radius:99px"></div></div>
+<div class="omegaFloat" id="cardB"><div class="bar" style="width:28%"></div><div class="line" style="width:88%"></div><div class="line" style="height:56px;margin-top:8px;border-radius:12px"></div><div style="display:flex;gap:6px"><div class="line" style="flex:1;height:8px;background:#A855F744"></div><div class="line" style="flex:1;height:8px"></div></div></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="lab">
+<div class="sectionHeader reveal">
+<div class="label mono">● OMEGA LAB • FÍSICA GRAVITACIONAL • 120FPS</div>
+<h2>Tudo aqui tem peso, luz e gravidade.</h2>
+<p>No celular o toque arrasta com inércia real. No PC a luz segue seu mouse com profundidade.</p>
+</div>
+<div class="omegaGrid">
+<div class="omegaCard reveal"><h3>OMEGA A — Buraco negro com gravidade</h3><p class="labDesc">Mova o dedo. As partículas orbitam e o núcleo deforma o espaço.</p><div class="omegaArea" id="areaA" style="background:radial-gradient(ellipse at center,#1a1030 0%,#000 70%)"><canvas id="omegaCanvasA" style="position:absolute;inset:0;width:100%;height:100%"></canvas><div style="position:relative;z-index:2;font:.62rem 'JetBrains Mono';color:#d8b4fe;text-align:center">◐ GRAVITY WELL<br>98% • OMEGA CORE</div></div></div>
+<div class="omegaCard reveal"><h3>OMEGA B — Vidro líquido com refração</h3><p class="labDesc">Toque e arraste. O vidro deforma com refração real.</p><div class="omegaArea" id="areaB"><div id="liquidGlass" style="width:140px;height:180px;border-radius:20px;background:linear-gradient(145deg,rgba(168,85,247,.22),rgba(255,255,255,.08));border:1px solid #A855F744;backdrop-filter:blur(18px);box-shadow:inset 0 1px 0 #ffffff22, 0 20px 50px #0008;display:grid;place-items:center;font:.6rem 'JetBrains Mono';color:#d8b4fe;transform-style:preserve-3d;transition:transform .15s">LIQUID<br>GLASS<br>● TOUCH</div></div></div>
+<div class="omegaCard reveal" style="grid-column:span 2"><h3>OMEGA C — Timeline gravitacional</h3><p class="labDesc">Uma linha do tempo que curva com gravidade. Cada ponto tem massa.</p><div class="omegaArea" style="flex-direction:column;padding:20px"><div style="width:100%;height:6px;border-radius:99px;background:linear-gradient(90deg,#1a1030,#A855F7,#1a1030);position:relative"><div style="position:absolute;left:15%;top:50%;width:14px;height:14px;background:#A855F7;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 16px #A855F7"></div><div style="position:absolute;left:45%;top:50%;width:22px;height:22px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 24px #A855F7"></div><div style="position:absolute;left:80%;top:50%;width:14px;height:14px;background:#A855F7;border-radius:50%;transform:translate(-50%,-50%)"></div></div><div style="display:flex;justify-content:space-between;width:100%;margin-top:14px;font:.58rem 'JetBrains Mono';color:#9a8ab8"><span>GENESIS</span><span style="color:#fff">NEXUS</span><span>OMEGA</span></div></div></div>
+</div>
+</section>
+
+<section id="ctaOmega">
+<canvas id="ctaCanvas"></canvas>
+<div class="ctaContent reveal">
+<h2>FEITO PARA SER <span>SENTIDO NO TOQUE.</span></h2>
+<p style="margin-top:16px;color:var(--muted);font:.92rem/1.7 'Space Grotesk';max-width:600px;margin-left:auto;margin-right:auto">O NEXUS impressiona no PC. O OMEGA foi feito para o celular ser ainda mais bonito. Cada toque tem inércia, luz e profundidade.</p>
+<div style="margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<button class="btnOmegaPrimary mono" onclick="window.open('https://ig.me/m/sitesmind','_blank')">CRIAR MEU SITE OMEGA →</button>
+<button class="btnOmegaSecondary mono" onclick="location.href='mind-dimensions.html'">VOLTAR AO UNIVERSO</button>
+</div>
+</div>
+</section>
+
+<footer class="footer">
+<div><div class="logo"><i></i>MIND <span>OMEGA</span></div><p class="mono">OMEGA EDITION • OUTRO NÍVEL • MOBILE FIRST</p></div>
+<div style="display:flex;gap:18px"><a href="#" class="mono">◉ NEXUS</a><a href="mind-dimensions.html" class="mono">DIMENSIONS</a><a href="#" onclick="window.open('https://ig.me/m/sitesmind','_blank')" class="mono">INSTAGRAM</a></div>
+</footer>
+
+<script>
+const hamburger=document.getElementById('hamburger');
+const mobileMenu=document.getElementById('mobileMenu');
+hamburger?.addEventListener('click',()=>{hamburger.classList.toggle('active');mobileMenu.classList.toggle('open');});
+mobileMenu?.querySelectorAll('a,button').forEach(el=>el.addEventListener('click',()=>{hamburger.classList.remove('active');mobileMenu.classList.remove('open');}));
+document.getElementById('btnOpen').addEventListener('click',()=>document.getElementById('opening').classList.add('hide'));
+setTimeout(()=>{ const o=document.getElementById('opening'); if(o) o.classList.add('hide'); }, 4200);
+const reveals=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('on'); }); },{threshold:0.12});
+reveals.forEach(r=>io.observe(r));
+
+const omegaStage=document.getElementById('omegaStage');
+const coreA=document.getElementById('coreA');
+const cardA=document.getElementById('cardA');
+const cardB=document.getElementById('cardB');
+function handleOmegaMove(cx,cy){
+  if(window.innerWidth<=900) return;
+  const r=omegaStage.getBoundingClientRect();
+  const px=(cx-r.left)/r.width; const py=(cy-r.top)/r.height;
+  const x=(px-0.5)*30; const y=(py-0.5)*-20;
+  omegaStage.style.setProperty('--mx', (px*100)+'%'); omegaStage.style.setProperty('--my', (py*100)+'%');
+  coreA.style.setProperty('--mx', (px*100)+'%'); coreA.style.setProperty('--my', (py*100)+'%');
+  coreA.style.transform=`rotateY(${x}deg) rotateX(${y}deg) translateZ(32px)`;
+  cardA.style.transform=`rotateY(${-18+x}deg) rotateX(${10+y}deg) translateZ(24px)`;
+  cardB.style.transform=`rotateY(${16+x}deg) rotateX(${6+y}deg) translateZ(20px)`;
 }
-function openContato(nome){
-  const msg = `Olá MIND! Vi o modelo de ${nome} na vitrine e quero um igual para minha empresa.`;
-  // Abre insta primeiro - troca para whatsapp se quiser: https://wa.me/55SEUNUMERO?text=
-  window.open(`https://ig.me/m/sitesmind`, '_blank');
+omegaStage.addEventListener('mousemove', e=>handleOmegaMove(e.clientX,e.clientY));
+omegaStage.addEventListener('touchmove', e=>handleOmegaMove(e.touches[0].clientX,e.touches[0].clientY), {passive:true});
+omegaStage.addEventListener('mouseleave', ()=>{
+  if(window.innerWidth<=900) return;
+  coreA.style.transform='rotateY(0) rotateX(0) translateZ(0)';
+  cardA.style.transform='rotateY(-18deg) rotateX(10deg) translateZ(0)';
+  cardB.style.transform='rotateY(16deg) rotateX(6deg) translateZ(0)';
+});
+const liquid=document.getElementById('liquidGlass');
+const areaB=document.getElementById('areaB');
+function handleLiquid(cx,cy){
+  const r=areaB.getBoundingClientRect();
+  const px=(cx-r.left)/r.width; const py=(cy-r.top)/r.height;
+  const x=(px-0.5)*28; const y=(py-0.5)*-22;
+  liquid.style.transform=`rotateY(${x}deg) rotateX(${y}deg) translateZ(24px) scale(1.04)`;
 }
-function render(){
-  const q=document.getElementById('search').value.toLowerCase();
-  const grid=document.getElementById('grid');
-  const lista=CATEGORIAS_MODELO.filter(c=>{
-    const okCat=catAtual==="TODOS" || c.categoria===catAtual;
-    const okSearch=!q || c.nome.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q) || c.categoria.toLowerCase().includes(q);
-    return okCat && okSearch;
+areaB.addEventListener('mousemove', e=>handleLiquid(e.clientX,e.clientY));
+areaB.addEventListener('touchmove', e=>handleLiquid(e.touches[0].clientX,e.touches[0].clientY), {passive:true});
+areaB.addEventListener('mouseleave', ()=>liquid.style.transform='rotateY(0) rotateX(0) translateZ(0) scale(1)');
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+const isMobile=window.innerWidth<700;
+
+function initOmegaHero(){
+  const canvas=document.getElementById('heroCanvas');
+  if(!canvas) return;
+  const scene=new THREE.Scene();
+  scene.fog=new THREE.FogExp2(0x05010a, 0.032);
+  const camera=new THREE.PerspectiveCamera(48, canvas.clientWidth/canvas.clientHeight, 0.1, 100);
+  camera.position.set(0,1,6.2);
+  const renderer=new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile?1.3:1.7));
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.15;
+  const composer=new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene,camera));
+  const bloom=new UnrealBloomPass(new THREE.Vector2(canvas.clientWidth, canvas.clientHeight), 0.85, 0.45, 0.8);
+  composer.addPass(bloom);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const dir=new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(3,5,4); scene.add(dir);
+
+  // OMEGA BLACK HOLE SHADER
+  const blackHoleMat=new THREE.ShaderMaterial({
+    uniforms:{time:{value:0}, color:{value:new THREE.Color(0xA855F7)}},
+    vertexShader:`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader:`uniform float time; uniform vec3 color; varying vec2 vUv;
+    void main(){
+      vec2 uv=vUv*2.0-1.0;
+      float r=length(uv);
+      float a=atan(uv.y, uv.x);
+      float distortion=sin(a*6.0 + r*18.0 - time*1.4)*0.18;
+      float ring=smoothstep(0.35+distortion,0.36+distortion,r) * (1.0-smoothstep(0.36+distortion,0.42+distortion,r));
+      float core=smoothstep(0.5,0.0,r);
+      float glow=pow(1.0-r, 3.5);
+      vec3 col=color*ring*2.2 + color*glow*0.6 + vec3(0.05,0.02,0.15)*core;
+      float alpha=ring*0.95 + glow*0.35 + core*0.15;
+      gl_FragColor=vec4(col, alpha);
+    }`,
+    transparent:true, side:THREE.DoubleSide, blending:THREE.AdditiveBlending
   });
-  grid.innerHTML=lista.map(c=>`
-    <div class="card">
-      <div class="cardImg">
-        <img src="${c.img}" loading="lazy">
-        <div class="tagCat">${c.logo} ${c.categoria.toUpperCase()}</div>
-        <div class="tagLive">MODELO</div>
-      </div>
-      <div class="cardBody">
-        <h3>${c.nome}</h3>
-        <p>${c.desc}</p>
-        <div class="meta">${c.tags.map(t=>`<span>${t}</span>`).join('')}</div>
-        <button class="btnVisit" onclick="openContato('${c.nome}')">QUERO ESSE MODELO →</button>
-      </div>
-    </div>
-  `).join('') || `<div style="grid-column:1/-1; text-align:center; color:#5a7a9b; padding:40px; font-family:'JetBrains Mono'">Nenhuma categoria encontrada para "${q}"</div>`;
+  const hole=new THREE.Mesh(new THREE.CircleGeometry(1.6, 96), blackHoleMat);
+  hole.position.set(1.4,0.15,-1.2);
+  scene.add(hole);
+
+  const torus1=new THREE.Mesh(new THREE.TorusGeometry(1.65,0.08,16,80), new THREE.MeshStandardMaterial({color:0xA855F7, emissive:0xA855F7, emissiveIntensity:1.6}));
+  torus1.position.copy(hole.position); torus1.position.z+=0.08; scene.add(torus1);
+  const torus2=new THREE.Mesh(new THREE.TorusGeometry(1.9,0.02,12,64), new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.5}));
+  torus2.position.copy(hole.position); torus2.position.z+=0.1; scene.add(torus2);
+  const torus3=new THREE.Mesh(new THREE.TorusGeometry(2.15,0.01,10,48), new THREE.MeshBasicMaterial({color:0xA855F7, transparent:true, opacity:0.22}));
+  torus3.position.copy(hole.position); torus3.position.z+=0.12; scene.add(torus3);
+
+  const pCount=isMobile?90:180;
+  const pGeo=new THREE.BufferGeometry();
+  const pPos=new Float32Array(pCount*3);
+  const pVel=new Float32Array(pCount*3);
+  for(let i=0;i<pCount;i++){ const angle=Math.random()*Math.PI*2; const rad=1.2+Math.random()*3.2; pPos[i*3]=Math.cos(angle)*rad+1.4; pPos[i*3+1]=Math.sin(angle)*rad*0.6; pPos[i*3+2]=(Math.random()-0.5)*2.2; pVel[i*3]=(Math.random()-0.5)*0.012; pVel[i*3+1]=(Math.random()-0.5)*0.012; }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+  const pMat=new THREE.PointsMaterial({color:0xd8b4fe, size:0.07, transparent:true, opacity:0.8, sizeAttenuation:true});
+  const points=new THREE.Points(pGeo, pMat); scene.add(points);
+
+  let mouseX=0, mouseY=0;
+  window.addEventListener('mousemove', e=>{ mouseX=(e.clientX/window.innerWidth-0.5)*0.9; mouseY=(e.clientY/window.innerHeight-0.5)*0.5; });
+  window.addEventListener('touchmove', e=>{ mouseX=(e.touches[0].clientX/window.innerWidth-0.5)*0.9; mouseY=(e.touches[0].clientY/window.innerHeight-0.5)*0.5; }, {passive:true});
+
+  const clock=new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const t=clock.getElapsedTime();
+    blackHoleMat.uniforms.time.value=t;
+    hole.rotation.z=t*0.12;
+    torus1.rotation.z=t*0.22; torus1.rotation.x=Math.sin(t*0.3)*0.15;
+    torus2.rotation.z=-t*0.18;
+    torus3.rotation.z=t*0.08;
+    camera.position.x+=(mouseX - camera.position.x)*0.05;
+    camera.position.y+=(1+mouseY - camera.position.y)*0.05;
+    camera.lookAt(0,0.15,0);
+    const pos=pGeo.attributes.position.array;
+    for(let i=0;i<pCount;i++){
+      const dx=1.4-pos[i*3]; const dy=0.15-pos[i*3+1];
+      const dist=Math.sqrt(dx*dx+dy*dy)+0.1;
+      const force=0.0008/dist;
+      pos[i*3]+=dx*force + pVel[i*3] + mouseX*0.002;
+      pos[i*3+1]+=dy*force + pVel[i*3+1];
+      if(dist<0.4){ const a=Math.random()*Math.PI*2; const r=1.8+Math.random()*2.5; pos[i*3]=Math.cos(a)*r+1.4; pos[i*3+1]=Math.sin(a)*r*0.6; }
+    }
+    pGeo.attributes.position.needsUpdate=true;
+    composer.render();
+  }
+  animate();
+  window.addEventListener('resize', ()=>{ const w=canvas.clientWidth, h=canvas.clientHeight; camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); composer.setSize(w,h); });
 }
-render();
+initOmegaHero();
+
+function simpleParticles(id, count, color){
+  const c=document.getElementById(id); if(!c) return;
+  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(60, c.clientWidth/c.clientHeight, 0.1, 100); camera.position.z=6;
+  const renderer=new THREE.WebGLRenderer({canvas:c, alpha:true, antialias:true}); renderer.setSize(c.clientWidth, c.clientHeight); renderer.setPixelRatio(1.2);
+  const geo=new THREE.BufferGeometry(); const pos=new Float32Array(count*3); for(let i=0;i<count*3;i++) pos[i]=(Math.random()-0.5)*12;
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3)); const mat=new THREE.PointsMaterial({color, size:0.09, transparent:true, opacity:0.75}); const points=new THREE.Points(geo, mat); scene.add(points);
+  function anim(){ requestAnimationFrame(anim); points.rotation.y+=0.0012; points.rotation.x+=0.0005; renderer.render(scene,camera); } anim();
+}
+simpleParticles('openingCanvas', isMobile?70:140, 0xA855F7);
+simpleParticles('ctaCanvas', isMobile?50:90, 0xd8b4fe);
+
+// OMEGA CANVAS A - GRAVITY WELL
+const canvasA=document.getElementById('omegaCanvasA');
+if(canvasA){
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(50, canvasA.clientWidth/canvasA.clientHeight, 0.1, 100); camera.position.z=4;
+  const renderer=new THREE.WebGLRenderer({canvas:canvasA, alpha:true, antialias:true}); renderer.setSize(canvasA.clientWidth, canvasA.clientHeight); renderer.setPixelRatio(1.2);
+  const geo=new THREE.BufferGeometry(); const count=80; const pos=new Float32Array(count*3);
+  for(let i=0;i<count;i++){ const a=Math.random()*Math.PI*2; const r=Math.random()*2; pos[i*3]=Math.cos(a)*r; pos[i*3+1]=Math.sin(a)*r; pos[i*3+2]=(Math.random()-0.5)*0.5; }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const mat=new THREE.PointsMaterial({color:0xA855F7, size:0.08, transparent:true, opacity:0.9});
+  const pts=new THREE.Points(geo, mat); scene.add(pts);
+  function anim(){ requestAnimationFrame(anim); pts.rotation.z+=0.002; renderer.render(scene,camera); } anim();
+}
 </script>
 </body>
 </html>
